@@ -13,9 +13,22 @@ for (let index = 1; index <= T; index++) {
     return Number(x);
   })
 
-  console.log(`Case #${index}: ${solve()}`);
+  console.log(`Case #${index}: ${solve(Number(B), arr)}`);
 }
 
-function solve() {
-  
+function solve(B, arr) {
+  let price, counter = 0;
+
+  arr.sort(function(a, b) {
+    return a - b;
+  });
+  price = arr[0];
+
+  while (price <= B) {
+    B -= arr[counter];
+    counter++;
+    price = arr[counter];
+  }
+
+  return counter;
 }
