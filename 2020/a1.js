@@ -6,29 +6,61 @@ const readline = () => {
   return input[currentLine++];
 }
 
+const swap = (arr, first, second) => {
+  let temp = arr[first];
+  arr[first] = arr[second];
+  arr[second] = temp;
+}
+
+function solve(N, arr) {
+  let prevOdd, prevEven;
+  let prevOddIndex, prevEvenIndex;
+  let firstOdd = true, firstEven = true;
+
+  let final = '';
+
+  for (let outIndex = 0; outIndex < N; outIndex++) {
+    for (let inIndex = 0; inIndex < N; inIndex++) {
+      if (arr[inIndex] % 2 === 0) {
+        //even
+        if (!firstEven && arr[inIndex] > prevEven) {
+          swap(arr, inIndex, prevEvenIndex);
+        }
+        
+        prevEven = arr[inIndex];
+        prevEvenIndex = inIndex;
+        firstEven = false;
+      }
+      else {
+        if (!firstOdd && arr[inIndex] < prevOdd) {
+          swap(arr, inIndex, prevOddIndex);
+        }
+        
+        prevOdd = arr[inIndex];
+        prevOddIndex = inIndex;
+        firstOdd = false;
+      }
+    }
+
+    firstEven = true;
+    firstOdd = true;
+  }
+
+  arr.forEach(item => {
+    final += item + ' ';
+  });
+
+  return final;
+}
+
 let T = readline();
 for (let index = 1; index <= T; index++) {
-  let [N, B] = readline().split(' ');
+  let [N] = readline().split(' ').map(x => {
+    return Number(x);
+  });
   let arr = readline().split(' ').map(x => {
     return Number(x);
   })
 
-  console.log(`Case #${index}: ${solve(Number(B), arr)}`);
-}
-
-function solve(B, arr) {
-  let price, counter = 0;
-
-  arr.sort(function(a, b) {
-    return a - b;
-  });
-  price = arr[0];
-
-  while (price <= B) {
-    B -= arr[counter];
-    counter++;
-    price = arr[counter];
-  }
-
-  return counter;
+  console.log(`Case #${index}: ${solve(N, arr)}`);
 }
