@@ -1,10 +1,5 @@
-const fs = `
-3
-15012233444 3-4-4
-15012233444 3-3-5
-12223 2-3
-`;
-const input = fs.trim().split('\n');
+const fs = require('fs');
+const input = fs.readFileSync(0, 'utf-8').trim().split('\n');
 
 let currentLine = 0;
 const readline = () => {
@@ -44,8 +39,8 @@ function solve(N, format) {
   let final = '';
 
   format.forEach((gap, index) => {
-    phoneArr[index] = N.slice(prevSpot, prevSpot + Number(gap) + 1);
-    prevSpot = prevSpot + Number(gap) + 1;
+    phoneArr[index] = N.slice(prevSpot, prevSpot + Number(gap));
+    prevSpot = prevSpot + Number(gap);
   });
 
   phoneArr.forEach(group => {
@@ -55,18 +50,21 @@ function solve(N, format) {
     for (let index = 0; index < group.length; index++) {
       wkgIndex = index;
 
-      while (wkgIndex < group.length &&
-             group[wkgIndex] === group[wkgIndex - 1]) {
+      while (wkgIndex < group.length + 1 &&
+             group[wkgIndex] === group[wkgIndex + 1]) {
         len++;
         wkgIndex++;
       }
 
       final += `${lenDict[len]}${numDict[Number(group[index])]} `;
 
-      if (len < 11) {
-        index = wkgIndex;
+      if (len > 10) {
+        for (let lenIndex = index; lenIndex < index + len; index++) {
+          final += `${numDict[Number(group[index])]} `;
+        }
       }
       len = 1;
+      index = wkgIndex;
     }
   });
 
